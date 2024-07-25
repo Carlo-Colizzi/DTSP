@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTS Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script defer src="{{ url_for('static', filename='contractABI.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.10.0/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1><a href="./" class="a-title"> DECENTRALIZED THREAT <br> SHARING PLATFORM</a></h1>
+        <p class="subtitle">Analyse suspicious files with Virustotal to detect malware and share the results <br> on the Ethereum Blockchain. Collaboration is the best defence!!</p>
+        <hr>
+
+        {% if analysis %}
+        <div class="container">
+            <h2 class="table-title"> File: {{ analysis['filename'] }} </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SHA-256</td>
+                        <td id="sha256"></td>
+                    </tr>
+                    <tr>
+                        <td>MD5</td>
+                        <td id="md5"></td>
+                    </tr>
+                    <tr>
+                        <td>Flagged malicious</td>
+                        <td id="malicious"></td>
+                    </tr>
+                    <tr>
+                        <td>File type</td>
+                        <td id="type"></td>
+                    </tr>
+                    <tr>
+                        <td>File size</td>
+                        <td id="size"></td>
+                    </tr>
+                    <tr>
+                        <td>Last Analysis</td>
+                        <td id="date"> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <img src="{{ url_for('static', filename='images/logo-upload.png') }}" alt="Upload icon" class="upload-icon">
+        {% endif %}
+        <div class="upload-section">
+            <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+                <input id="file-upload" type="file" name="file" required />
+                <label for="file-upload" class="custom-file-upload">
+                    Upload file
+                </label>
+            </form>
+        </div>
+        <div class="loader-container">
+            <div class="loader"></div>
+          </div>
+        <p class="terms">
+            By submitting data above, you are agreeing to Virustotal <a href="https://docs.virustotal.com/docs/terms-of-service">Terms of Service</a> and <a href="https://docs.virustotal.com/docs/privacy-policy">Privacy Notice</a>, and to the sharing of your Sample submission with the security community. Please do not submit any personal information; we are not responsible for the contents of your submission. <a href="https://docs.virustotal.com/docs/how-it-works">Learn more.</a>
+        </p>
+    </div>
+    {% if analysis %}
+    <script defer>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Retrieve analysis data from Flask and assign to variables
+            var sha256 = {{ analysis['sha256'] | tojson }};
+            var md5 = {{ analysis['MD5'] | tojson }};
+            var maliciousDetected = {{ analysis['malicious'] | tojson }};
+            var numberantimalware = {{ analysis['numberantimalware'] | tojson }};
+            var malicious = maliciousDetected.toString() + ' / ' + numberantimalware.toString();
+            var type = {{ analysis['type'] | tojson }};
+            var size = {{ analysis['size'] | tojson }};
+            var date = {{ analysis['date'] | tojson }};
+
+            // Check if MetaMask is installed
+            if (typeof window.ethereum !== 'undefined') {
+                console.log('[+]MetaMask is installed!');
+
+                // Function to connect MetaMask
+                async function connectMetaMask() {
+                    try {
+                        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                        console.log('[+]Connected to account:', accounts[0]);
+                        return accounts[0];
+                    } catch (error) {
+                        console.error('[!]Error during MetaMask connection:', error);
+                    }
+                }
+
+                // Call connectMetaMask function and get the connected account
+                const account = await connectMetaMask();
+
+                // If account is connected, create Web3 instance and interact with smart contract
+                if (account) {
+                    //Insert your URL and Contract Address
+                    const web3 = new Web3('http://127.0.0.1:8545');
+                    const contractAddress = '0x8E93B2F47453cA5fDAcd6b66A8E55374a787635e';
+
+                    const dtsp = new web3.eth.Contract(contractABI, contractAddress);
+                    // Check if Web3 is connected to Ganache
+                    web3.eth.net.isListening()
+                        .then(() => console.log('[+]Connected to Ganache'))
+                        .catch(e => console.log('[!]Something went wrong', e));
+
+                    // Function to retrieve last date of analysis from smart contract
+                    async function retrieveLastDateAnalysis() {
+                        try {
+                            const result = await dtsp.methods.retrieveAnalysis(sha256).call({ from: account });
+                            console.log('[+]retrieveAnalysis executed with result: ', result);
+                            console.log("MD5:", result[0]);
+                            console.log("Flagged Malicious:", result[1]);
+                            console.log("File Type:", result[2]);
+                            console.log("Size:", result[3].toString());
+                            console.log("Last Analysis:", result[4]);
+                            if (result[0] == "") {
+                                return "Never";
+                            } else {
+                                return result[4];
+                            }
+                        } catch (error) {
+                            console.error("[!]Error retrieving analysis:", error);
+                            return "Error";
+                        }
+                    }
+
+                    // Function to store analysis data in the smart contract
+                    async function storeAnalysis() {
+                        try {
+                            await dtsp.methods.storeAnalysis(sha256, md5, malicious, type, parseInt(size,10), date).send({ from: account, gas: 3000000 });
+                            console.log('[+]storeAnalysis executed with parameters: ', sha256, md5, malicious, type, parseInt(size,10), date);
+                        } catch (error) {
+                            console.error("[!]Error storing analysis:", error);
+                            return "Error";
+                        }
+                    }
+
+                    // Retrieve and display last date of analysis
+                    const last_date = await retrieveLastDateAnalysis();
+                    document.getElementById('sha256').innerText = sha256;
+                    document.getElementById('md5').innerText = md5;
+                    document.getElementById('malicious').innerText = malicious;
+                    document.getElementById('type').innerText = type;
+                    document.getElementById('size').innerText = size + " bytes";
+                    document.getElementById('date').innerText = last_date;
+
+                    // Store analysis data in the smart contract
+                    storeAnalysis();
+                }
+            } else {
+                console.error('[!]MetaMask is unusable. Please add Metamask extension.');
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>
