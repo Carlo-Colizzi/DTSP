@@ -13,6 +13,16 @@
 ## Introduction
 DTSP stands for Decentralized Threat Sharing Platform. It aims to create an independent space for sharing global threats and avoiding national censorship through blockchain technology.
 
+## Why is a DTSP necessary?
+A Decentralized Threat Sharing Platform lets to obtain several goals that are impossible to reach with the actual centralized technologies:
+<ul>
+  <li> Neutrality and Independence </li>
+  <li> Transparency </li>
+  <li> International Collaboration </li>
+  <li> Resilience Against Censorship </li>
+  <li> Improving Global Security </li>
+</ul>
+
 ## Installation
 ```bash
 # DTSP and dependences
