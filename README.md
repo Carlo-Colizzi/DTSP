@@ -11,7 +11,9 @@
 </center>
 
 ## Introduction
-DTSP stands for Decentralized Threat Sharing Platform. It aims to create an independent space for sharing global threats and avoiding national censorship through blockchain technology.
+DTSP stands for Decentralized Threat Sharing Platform. It aims to create an independent space for sharing global threats and avoiding national censorship through blockchain technology. DTSP merges the VirusTotal Malware Analysis Engine with Ethereum Blockchain Technology.
+
+You can use this platform through the browser and Web3. A web page allows users to upload files, analyze them, and record the data on the blockchain.
 
 ## Why is a DTSP necessary?
 A Decentralized Threat Sharing Platform lets to obtain several goals that are impossible to reach with the actual centralized technologies:
