@@ -23,8 +23,13 @@ A Decentralized Threat Sharing Platform lets to obtain several goals that are im
   <li> Improving Global Security </li>
 </ul>
 
+## Main Page DTSP
 <div align="center">
   <img src="https://github.com/Carlo-Colizzi/DTSP/blob/main/Documentation%20and%20Resources/Images/main_page.png">
+</div>
+
+## Malware Analysis Example
+<div align="center">
   <img src="https://github.com/Carlo-Colizzi/DTSP/blob/main/Documentation%20and%20Resources/Images/scan_example.png">
 </div>
 
