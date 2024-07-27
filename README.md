@@ -12,3 +12,32 @@
 
 ## Introduction
 DTSP stands for Decentralized Threat Sharing Platform. It aims to create an independent space for sharing global threats and avoiding national censorship through blockchain technology.
+
+## Installation
+```bash
+# DTSP and dependences
+git clone https://github.com/Carlo-Colizzi/DTSP
+cd NetGun
+pip install -r requirements.txt
+
+# Node.js
+sudo apt update
+sudo apt install nodejs
+
+# npm
+sudo apt install npm
+
+# Truffle 
+npm install -g truffle
+
+# Ganahce
+# Install it from the official site
+# https://archive.trufflesuite.com/ganache/
+
+```
+
+
+## Configure
+```bash
+
+```
