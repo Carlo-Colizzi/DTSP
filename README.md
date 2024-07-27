@@ -33,6 +33,11 @@ A Decentralized Threat Sharing Platform lets to obtain several goals that are im
   <img src="https://github.com/Carlo-Colizzi/DTSP/blob/main/Documentation%20and%20Resources/Images/scan_example.png">
 </div>
 
+## DTSP Architecture
+<div align="center">
+  <img src="https://github.com/Carlo-Colizzi/DTSP/blob/main/Documentation%20and%20Resources/Images/DTSP_architecture.png">
+</div>
+
 ## Installation
 ```bash
 # DTSP and dependences
