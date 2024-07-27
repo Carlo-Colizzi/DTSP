@@ -65,4 +65,28 @@ npm install -g truffle
 ## Configure
 ```bash
 
+# Start Ganache
+./Ganache.AppImage
+
+# Load the Solidity Smart Contract on the Ganache Blockchain
+cd ./DTSP/SmartContract
+truffle migrate
+
+# Setup DTSP Webserver
+#[1] Open with an editor ./DTSP/WebServer/virustotalScan.py
+#[2] Add your Virustotal API KEY in the API_KEY variable
+#[3] Open with an editor ./DTSP/WebServer/templates/template.html
+#[4] Add the URL of Ganache Instance (row 110)
+#[5] Add the contract address given to the Smart Contract after the loading (row 111)
+#[6] Start the WebServer
+Python3 ./DTSP/WebServer/DTSP.py
+
+# Setup your browser
+#[1] Add MetaMask Extension to your browser
+#[2] Login
+#[3] Add an account present in Ganache 
+
+# Now you can use DTSP!!
+# Connect to the Web Server and start to use it
 ```
+
